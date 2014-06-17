@@ -32,8 +32,27 @@ class Task
 		nil
 	end
 
+	def self.find_by_name(name)
+		all.each do |p|
+			return p if p.command.include?(name)
+		end
+
+		nil
+	end
+
+	def update(task_params)
+		priority = task_params[:priority]
+		`renice -n "#{priority}" -p "#{self.pid}"`
+		true
+	end
+
 	def priority
-		`awk '{print $18}' /proc/"#{self.pid}"/stat`.gsub!(/[^0-9A-Za-z]/, '')
+		`ps --no-headers -p "#{self.pid}" -o nice`.gsub!(/[^0-9A-Za-z]/, '')
+	end
+
+	def destroy
+		`kill "#{self.pid}"`
+		true
 	end
 
 	def as_json(options = { })
