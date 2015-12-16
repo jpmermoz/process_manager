@@ -2,7 +2,7 @@
 lock '3.4.0'
 
 set :application, 'jpmermoz.codingways.com'
-set :repo_url, 'git@github.org:jpmermoz/process_manager.git'
+set :repo_url, 'git@github.com:jpmermoz/process_manager.git'
 set :deploy_to, '/var/www/jpmermoz.codingways.com'
 set :keep_releases, 3
 set :passenger_restart_command, 'touch'
