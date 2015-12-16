@@ -8,9 +8,6 @@ set :keep_releases, 3
 set :passenger_restart_command, 'touch'
 set :passenger_restart_options, -> { "#{deploy_to}/current/tmp/restart.txt" }
 set :linked_dirs, %w{log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system public/uploads}
-set :pty, false
-set :sidekiq_config, -> { File.join(current_path, 'config', 'sidekiq.yml') }
-set :whenever_identifier, ->{ "#{fetch(:application)}_#{fetch(:stage)}" }
 
 # clear the default restart task
 Rake::Task["deploy:restart"].clear_actions
