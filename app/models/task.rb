@@ -20,11 +20,7 @@ class Task
 	end
 
 	def self.find(id)
-		all.each do |p|
-			return p if p.pid == id.to_s
-		end
-
-		nil
+		all.detect { |p| p.pid == id.to_s }
 	end
 
 	def save
@@ -81,7 +77,7 @@ class Task
     p[:virtual_memory_size] = "#{vmz} KiB"
     p[:resident_set_size] = rss
     p[:tty] = tty
-    p[:state] = stat
+    p[:status] = stat
     p[:start_at] = start
     p[:cpu_time] = time
     p[:command] = command

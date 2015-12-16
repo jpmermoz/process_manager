@@ -4,6 +4,30 @@ class TasksController < ApplicationController
   def index
     @tasks = Task.all
 
+    # filter by status
+    @tasks = @tasks.select { |t| t.stat.include?(params[:status]) } if params[:status].present?
+
+    # filter by user
+    @tasks = @tasks.select { |t| t.user.include?(params[:user]) } if params[:user].present?
+
+    # filter by cpu usage less or equals than
+    @tasks = @tasks.select { |t| t.cpu.to_f <= params[:cpu_lteq].to_f } if params[:cpu_lteq].present?
+
+    # filter by cpu usage greater or equals than
+    @tasks = @tasks.select { |t| t.cpu.to_f >= params[:cpu_gteq].to_f } if params[:cpu_gteq].present?
+
+    # filter by memory usage less or equals than
+    @tasks = @tasks.select { |t| t.mem.to_f <= params[:mem_lteq].to_f } if params[:mem_lteq].present?
+
+    # filter by memory usage greater or equals than
+    @tasks = @tasks.select { |t| t.mem.to_f >= params[:mem_gteq].to_f } if params[:mem_gteq].present?
+
+    # filter by rss less or equals than
+    @tasks = @tasks.select { |t| t.rss.to_f <= params[:rss_lteq].to_f } if params[:rss_lteq].present?
+
+    # filter by rss greater or equals than
+    @tasks = @tasks.select { |t| t.rss.to_f >= params[:rss_gteq].to_f } if params[:rss_gteq].present?
+
     render json: @tasks
   end
 
@@ -11,7 +35,6 @@ class TasksController < ApplicationController
   # GET /tasks/1.json
   def show
     @task = Task.find(params[:id])
-
     render json: @task
   end
 
