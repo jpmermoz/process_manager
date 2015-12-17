@@ -57,9 +57,22 @@ class Task
 		`ps --no-headers -p "#{self.pid}" -o nice`.gsub!(/[^0-9A-Za-z]/, '')
 	end
 
-	def destroy
+	def destroy(timeout = 0)
 		begin
-			Process.kill(:KILL, self.pid.to_i)
+			Process.kill("SIGUSR1", self.pid.to_i)
+			sleep(timeout)
+			Process.kill("TERM", self.pid.to_i) if Task.find(self.pid.to_i).present?
+		rescue Exception => e
+			self.errors << e.message
+			return false
+		end
+
+		true
+	end
+
+	def destroy!
+		begin
+			Process.kill("TERM", self.pid.to_i)
 		rescue Exception => e
 			self.errors << e.message
 			return false
