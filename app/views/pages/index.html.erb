@@ -22,6 +22,7 @@
           <hr />
           <p>La presente API permite a un usuario final gestionar los procesos corriendo bajo un entorno basado en Linux.</p>
           <p>Se utilizo el Framework Rails API basado en el lenguaje de programacion Ruby, el cual se encuentra especificamente desarrollado para la creacion de API's, removiendo el overhead de utilizar un framework MVC completo.</p>
+          <p>Por ultimo, todo el trafico viaja encriptado gracias a los certificados gratuitos de <a href="http://www.letsencrypt.org" target="_blank">Let's Encrypt :)</a></p>
           <p>La funcionalidad que se incluye es la siguiene:</p>
           <ul>
             <li>Creacion de Procesos</li>
@@ -30,6 +31,13 @@
             <li>Modificacion de Procesos (Incluyendo su prioridad)</li>
             <li>Destruccion de procesos utilizando senales SIGUSR1 y TERM</li>
           </ul>
+        </div>
+        <div class="col-lg-12">
+          <h3>Ubicacion de API y codigo fuente</h3>
+          <hr />
+          <p>
+            La API se encuentra ubicada en <a href="https://jpmermoz.codingways.com" target="_blank">https://jpmermoz.codingways.com</a> mientras que el codigo fuente se encuentra ubicado en <a href="https://github.com/jpmermoz/process_manager" target="_blank">https://github.com/jpmermoz/process_manager</a>
+          </p>
         </div>
       </div>
       <div class="row">
@@ -46,6 +54,7 @@
           <h3>API Endpoints</h3>
           <hr />
           <h4 class="text-muted">/tasks endpoint (Method: GET)</h4>
+          <i>Permite listar los procesos del sistema filtrando por los parametros especificados.</i>
           <table class="table">
             <thead>
               <th>Parametros</th>
@@ -91,7 +100,7 @@
               <tr>
                 <td>rss_gteq</td>
                 <td>opcional</td>
-                <td>filtra procesos donde la memoria en KiB sea menor o igual a la especificada</td>
+                <td>filtra procesos donde la memoria en KiB sea mayor o igual a la especificada</td>
               </tr>
             </tbody>
           </table>
@@ -112,6 +121,8 @@
           </pre>
           <hr />
           <h4 class="text-muted">/tasks/[:id] endpoint (Method: GET)</h4>
+          <i>Permite ver un proceso en particular del sistema.</i>
+          <br />
           <strong>Ejemplo de Uso</strong>
           <p>Retornar el proceso donde su PID sea igual a 3</p>
           <pre>
@@ -121,7 +132,9 @@
                 200 OK
                 {"user":"root","pid":"3","cpu_percentage":"0.0%","memory_percentage":"0.0%","virtual_memory_size":"0 KiB","resident_set_size":"0","tty":"?","status":"S","start_at":"14:14","cpu_time":"0:00","command":"\\_ [ksoftirqd/0]","priority":"0"}
           </pre>
+          <hr />
           <h4 class="text-muted">/tasks endpoint (Method: POST)</h4>
+          <i>Permite spawnear un nuevo proceso.</i>
           <table class="table">
             <thead>
               <th>Parametros</th>
@@ -152,6 +165,81 @@
                 {"user":"jpmermoz","pid":"6717","cpu_percentage":"0.0%","memory_percentage":"0.3%","virtual_memory_size":"180468 KiB","resident_set_size":"15352","tty":"pts/0","status":"R+","start_at":"16:07","cpu_time":"0:00","command":"| | \\_ gedit","priority":"0"}
           </pre>
           <hr />
+          <h4 class="text-muted">/tasks/[:id] endpoint (Method: PUT)</h4>
+          <i>Permite modificar la prioridad del proceso especificado por su pid.</i>
+          <table class="table">
+            <thead>
+              <th>Parametros</th>
+              <th>Requerido / Opcional</th>
+              <th>Notas</th>
+            </thead>
+            <tbody>
+              <tr>
+                <td>priority</td>
+                <td>requerido</td>
+                <td>modifica la prioridad del proceso especificado</td>
+              </tr>
+            </tbody>
+          </table>
+          <strong>Ejemplo de Uso</strong>
+          <p>modifica la prioridad del proceso especificado utilizando 'renice' a 15</p>
+          <pre>
+            Request type: PUT
+            Endpoint URL: /tasks/7955
+            Example:
+                {
+                    "task": { 
+                      "priority": "15"
+                    }
+                }
+            Response:
+                202 ACCEPTED
+                {"user":"jpmermoz","pid":"8042","cpu_percentage":"0.6%","memory_percentage":"2.4%","virtual_memory_size":"798072 KiB","resident_set_size":"96528","tty":"?","status":"Sl","start_at":"16:56","cpu_time":"0:01","command":"| | \\_ /opt/google/chrome/chrome --type=renderer --lang=en-US --force-fieldtrials=*AffiliationBasedMatching/Enabled/AppBannerTriggering/Aggressive/AudioProcessing48kHzSupport/Default/CaptivePortalInterstitial/Enabled/*ChildAccountDetection/Disabled/*ChromeDashboard/Default/*ClientSideDetectionModel/Model0/*CrossDevicePromo/28DaySingleProfile/DataReductionProxyUseDataSaverOnVPN/Enabled/EnableGoogleCachedCopyTextExperiment/Button/*EnhancedBookmarks/Default/*ExtensionContentVerification/Enforce/*ExtensionDeveloperModeWarning/Default/InstanceID/Enabled/*NewProfileManagement/Enabled/*NewVideoRendererTrial/Enabled/*OmniboxBundledExperimentV1/Postperiod_AnswersInSuggest_A5/*PasswordGeneration/Disabled/PasswordLinkInSettings/Enabled/*PrerenderFromOmnibox/OmniboxPrerenderEnabled/ReportCertificateErrors/ShowAndPossiblySend/SHA1IdentityUIWarning/Enabled/SHA1ToolbarUIJanuary2016/Warning/SHA1ToolbarUIJanuary2017/Error","priority":"15"}
+          </pre>
+          <hr />
+          <h4 class="text-muted">/tasks/[:id] endpoint (Method: DELETE)</h4>
+          <i>Permite destruir un proceso de manera forzada</i>
+          <br />
+          <strong>Ejemplo de Uso</strong>
+          <p>Destruir el proceso especificado de manera forzada (TERM signal)</p>
+          <pre>
+            Request type: DELETE
+            Endpoint URL: /tasks/8722
+            Response:
+              [NO CONTENT]
+          </pre>
+          <hr />
+          <h4 class="text-muted">/tasks/[:id]/shutdown endpoint (Method: POST)</h4>
+          <i>Permite destruir un proceso de manera "graceful".</i>
+          <br />
+          <table class="table">
+            <thead>
+              <th>Parametros</th>
+              <th>Requerido / Opcional</th>
+              <th>Notas</th>
+            </thead>
+            <tbody>
+              <tr>
+                <td>timeout</td>
+                <td>opcional</td>
+                <td>especifica un timeout en segundos para matar al proceso con SIGUSR1, en caso de que no lo logre al completar los x segundos, se envia TERM</td>
+              </tr>
+            </tbody>
+          </table>
+          <strong>Ejemplo de Uso</strong>
+          <p>Destruir el proceso especificado de manera "graceful" (SIGUSR1) o destruirlo con SIGUSR1 despues de 10 segundos</p>
+          <pre>
+            Request type: POST
+            Endpoint URL: /tasks/shutdown/8722
+            Example:
+                {
+                    "task": { 
+                      "timeout": "10"
+                    }
+                }
+            Response:
+              [NO CONTENT]
+          </pre>
         </div>
       </div>
     </div>

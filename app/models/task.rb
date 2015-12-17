@@ -60,7 +60,7 @@ class Task
 	def destroy(timeout = 0)
 		begin
 			Process.kill("SIGUSR1", self.pid.to_i)
-			sleep(timeout)
+			sleep(timeout.to_i)
 			Process.kill("TERM", self.pid.to_i) if Task.find(self.pid.to_i).present?
 		rescue Exception => e
 			self.errors << e.message
