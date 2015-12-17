@@ -41,6 +41,119 @@
           </div>
         </div>
       </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <h3>API Endpoints</h3>
+          <hr />
+          <h4 class="text-muted">/tasks endpoint (Method: GET)</h4>
+          <table class="table">
+            <thead>
+              <th>Parametros</th>
+              <th>Requerido / Opcional</th>
+              <th>Notas</th>
+            </thead>
+            <tbody>
+              <tr>
+                <td>status</td>
+                <td>opcional</td>
+                <td>filtra por el estado de un proceso (case-sensitive)</td>
+              </tr>
+              <tr>
+                <td>user</td>
+                <td>opcional</td>
+                <td>filtra por el usuario que inicio un proceso (case-sensitive)</td>
+              </tr>
+              <tr>
+                <td>cpu_lteq</td>
+                <td>opcional</td>
+                <td>filtra procesos donde el porcentaje de cpu sea menor o igual al especificado</td>
+              </tr>
+              <tr>
+                <td>cpu_gteq</td>
+                <td>opcional</td>
+                <td>filtra procesos donde el porcentaje de cpu sea mayor o igual al especificado</td>
+              </tr>
+              <tr>
+                <td>mem_lteq</td>
+                <td>opcional</td>
+                <td>filtra procesos donde el porcentaje de memoria sea menor o igual al especificado</td>
+              </tr>
+              <tr>
+                <td>mem_gteq</td>
+                <td>opcional</td>
+                <td>filtra procesos donde el porcentaje de memoria sea mayor o igual al especificado</td>
+              </tr>
+              <tr>
+                <td>rss_lteq</td>
+                <td>opcional</td>
+                <td>filtra procesos donde la memoria en KiB sea menor o igual a la especificada</td>
+              </tr>
+              <tr>
+                <td>rss_gteq</td>
+                <td>opcional</td>
+                <td>filtra procesos donde la memoria en KiB sea menor o igual a la especificada</td>
+              </tr>
+            </tbody>
+          </table>
+          <strong>Ejemplo de Uso</strong>
+          <p>Retornar aquellos procesos del sistema donde su porcentaje de memoria en uso sea mayor al 5%</p>
+          <pre>
+            Request type: GET
+            Endpoint URL: /tasks
+            Example:
+                {
+                    "mem_gteq": "5"
+                }
+            Encoding:
+                mem_gteq=5
+            Response:
+                200 OK
+                [{"user":"jpmermoz","pid":"3285","cpu_percentage":"2.2%","memory_percentage":"6.6%","virtual_memory_size":"1320588 KiB","resident_set_size":"262864","tty":"?","status":"SLl","start_at":"14:17","cpu_time":"2:15","command":"\\_ /opt/google/chrome/chrome","priority":"0"}]
+          </pre>
+          <hr />
+          <h4 class="text-muted">/tasks/[:id] endpoint (Method: GET)</h4>
+          <strong>Ejemplo de Uso</strong>
+          <p>Retornar el proceso donde su PID sea igual a 3</p>
+          <pre>
+            Request type: GET
+            Endpoint URL: /tasks/3
+            Response:
+                200 OK
+                {"user":"root","pid":"3","cpu_percentage":"0.0%","memory_percentage":"0.0%","virtual_memory_size":"0 KiB","resident_set_size":"0","tty":"?","status":"S","start_at":"14:14","cpu_time":"0:00","command":"\\_ [ksoftirqd/0]","priority":"0"}
+          </pre>
+          <h4 class="text-muted">/tasks endpoint (Method: POST)</h4>
+          <table class="table">
+            <thead>
+              <th>Parametros</th>
+              <th>Requerido / Opcional</th>
+              <th>Notas</th>
+            </thead>
+            <tbody>
+              <tr>
+                <td>command</td>
+                <td>requerido</td>
+                <td>ejecuta el comando especificado en el sistema</td>
+              </tr>
+            </tbody>
+          </table>
+          <strong>Ejemplo de Uso</strong>
+          <p>Lanzar el proceso 'gedit' en el sistema</p>
+          <pre>
+            Request type: POST
+            Endpoint URL: /tasks
+            Example:
+                {
+                    "task": { 
+                      "command": "gedit"
+                    }
+                }
+            Response:
+                201 CREATED
+                {"user":"jpmermoz","pid":"6717","cpu_percentage":"0.0%","memory_percentage":"0.3%","virtual_memory_size":"180468 KiB","resident_set_size":"15352","tty":"pts/0","status":"R+","start_at":"16:07","cpu_time":"0:00","command":"| | \\_ gedit","priority":"0"}
+          </pre>
+          <hr />
+        </div>
+      </div>
     </div>
   </body>
 </html>
