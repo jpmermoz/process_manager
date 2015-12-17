@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Linux Process Manager</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha256-7s5uDGW3AHqw6xtJmNNtr+OBRJUlgkNJEo78P4b0yRw= sha512-nNo+yCHEyn0smMxSswnf/OnX6/KwJuZTlNZBjauKhTK0c+zT+q5JOCx0UFhXQ6rJR9jg6Es8gPuD2uZcYDLqSw==" crossorigin="anonymous">
+  </head>
+  <body>
+    <div class="container">
+      <div class="header clearfix">
+        <h3 class="text-muted"><%= image_tag "http://www.um.edu.ar/es/templates/umendoza/images/marca.png" %></h3>
+      </div>
+
+      <div class="jumbotron">
+        <h1>Monitoreo y Gestion de Redes Seguras</h1>
+        <p class="lead">API Restful que permite administrar los procesos corriendo bajo un SO Linux.</p>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-12">
+          <h3>Introduccion</h3>
+          <hr />
+          <p>La presente API permite a un usuario final gestionar los procesos corriendo bajo un entorno basado en Linux.</p>
+          <p>Se utilizo el Framework Rails API basado en el lenguaje de programacion Ruby, el cual se encuentra especificamente desarrollado para la creacion de API's, removiendo el overhead de utilizar un framework MVC completo.</p>
+          <p>La funcionalidad que se incluye es la siguiene:</p>
+          <ul>
+            <li>Creacion de Procesos</li>
+            <li>Listado de Procesos</li>
+            <li>Vista de un Proceso en particular</li>
+            <li>Modificacion de Procesos (Incluyendo su prioridad)</li>
+            <li>Destruccion de procesos utilizando senales SIGUSR1 y TERM</li>
+          </ul>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <h3>Infraestructura de Soporte</h3>
+          <hr />
+          <div class="text-center">
+            <%= image_tag "estructura.png", class: "img-responsive" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
